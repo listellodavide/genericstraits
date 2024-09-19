@@ -6,8 +6,8 @@ pub struct Coordinate<T> {
 }
 
 impl<T: std::fmt::Display> Coordinate<T> {
-    pub fn print(&self) {
-        println!("latitude: {}, longitude: {}", self.latitude, self.longitude);
+    pub fn print(&self, label: &str) {
+        println!("{} latitude: {}, longitude: {}", label, self.latitude, self.longitude);
     }
 }
 
