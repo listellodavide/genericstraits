@@ -11,6 +11,28 @@ impl<T: std::fmt::Display> Coordinate<T> {
     }
 }
 
+impl Coordinate<f64> {
+    // calculate distance as a spherical straight line between two coordinates
+    // https://en.wikipedia.org/wiki/Earth_radius
+    pub fn distance_in_miles(&self, other:&Coordinate<f64>) -> f64 {
+        let lat1= self.latitude.to_radians();
+        let lat2 = other.latitude.to_radians();
+        let lon1= self.longitude.to_radians();
+        let lon2 = other.longitude.to_radians();
+
+        let dlat = lat2 - lat1;
+        let dlon = lon2 - lon1;
+        let a = (dlat / 2.0).sin().powi(2) + lat1.cos() * lat2.cos() * (dlon / 2.0).sin().powi(2);
+        let c = 2.0 * a.sqrt().atan2((1.0 - a).sqrt());
+
+        return 3958.0 * c ; // radius_earth in miles * arc_distance in miles
+    }
+    
+    pub fn distance_in_km(&self, other:&Coordinate<f64>) -> f64 {
+        return self.distance_in_miles(other) * 1.6093448; // radius_earth in miles * arc_distance in miles * miles to km conversion
+    }
+}
+
 pub fn test_coordinates() {
     
     let location1 = Coordinate {
